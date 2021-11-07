@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Добавление новости</title>
+</head>
+<body>
+    <div style="margin: auto;">
+        <h1 style="text-align: center; background-color: MediumAquamarine;
+        width: 500px; padding: 20px; border-radius: 20px; margin: 10px auto;">Добавление новости</h1>
+        <form method="post" action="{% url 'add_news'%}" style="background-color: MediumAquamarine; width: 500px;
+        padding: 20px; border-radius: 20px; margin: auto;">
+            {% csrf_token %}
+            {% for f in form %}
+            <p><label class="form-label" for="{{ f.id_for_label }}"> {{ f.label }} </label> {{f}} </p>
+            {% endfor %}
+            <button type="submit">Добавить новость</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости</title>
+    <style>
+        button:hover {
+        color: black; /* Цвет текста активного пункта */
+        background-color: orange; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+        button:active {
+        color: white; /* Цвет текста активного пункта */
+        background-color: brown; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+    </style>
+</head>
+<body style="padding: 10px 50px;">
+    {% if news_list %}
+
+    <ul style="list-style-type: none; padding-inline-start: 0px;">
+        <li>
+            <ul style="display: flex; justify-content: space-around; align-items: center; flex-direction: row;  background-color: orange; min-height: 20px;
+            min-width: 500px; margin-bottom: 5px; padding: 10px; border-radius: 20px; list-style-type: none">
+            <li>
+                <h1 style="padding-left: 10px; padding-right: 180px; display: inline-block; font-family: Arial;">Новости</h1>
+            </li>
+            <li style="display: flex; align-items: center; padding: 0px 50px;">
+                {% if request.user.is_authenticated %}
+                    <h3 style="margin-right: 10px">Добро пожаловать на сайт, {{ request.user.username }}!</h3>
+                    <a href="{% url 'logout' %}">Выйти</a>
+                {% else %}
+                    <b>
+                        <a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
+                    </b>
+                {% endif %}
+            </li>
+        </ul>
+        </li>
+        {% for i in news_list %}
+        <li style="min-height: 20px; margin-bottom: 5px; padding: 10px;
+        border: 3px solid orange; border-radius: 20px; min-width: 500px;">
+            <div style="display: block; margin-bottom: 10px; min-width: 100px;">
+                <h3 style="margin: 0">
+                    {{ i.title }}
+                </h3>
+            </div>
+            <div style="display: block; margin-bottom: 10px; height: 85px; min-width: 200p; overflow: hidden">
+                <p style="margin: 0; min-width: 500px;">{{ i.content }}</p>
+            </div>
+
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="display: inline-block; width: 50%">
+                    <div style="display: block; width: 250px">
+                    <span>Дата создания: </span>
+                    {{ i.created_at }}
+                    </div>
+                    <div style="display: block; width: 250px">
+                    <span>Дата редактирования: </span>
+                    {{ i.updated_at }}
+                    </div>
+                    <div style="display: block; width: 250px">
+                    <span>Флаг активности: </span>
+                    {{ i.flag_active }}
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: flex-end; width: 50%">
+                    <div style="display: inline-block; margin-right: 5px; width: 100px">
+                        <form action="{% url 'edit_news' i.id %}" method="get">
+                            <button type="submit" style="height:30px; width:100px; border-radius: 10px;
+                        border: 3px solid orange;">Редактировать</button>
+                        </form>
+                    </div>
+
+                    <div style="display: inline-block; width: 100px; margin: 0; padding: 0; vertical-align: center;">
+                        <form action="{% url 'comment_news' i.id %}" method="get">
+                            <button type="submit" style="height:30px; width:100px; border-radius: 10px;
+                            border: 3px solid orange;">Подробнее</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <div>
+        <ul style="display: flex; padding: 0; list-style-type: none">
+            <li>
+                <form action="unpublished_news_list/" method="get">
+                    <button type="submit" style="margin-right: 10px; height:30px; width:150px; border-radius: 10px;
+                    border: 3px solid orange;">Неопубликованные новости</button>
+                </form>
+            </li>
+            <li>
+                <form action="add_news/" method="get">
+                    <button type="submit" style="height:30px; width:150px; border-radius: 10px;
+                    border: 3px solid orange;">Добавить новость</button>
+                </form>
+            </li>
+        </ul>
+    </div>
+    {% else %}
+        <p> Новостей нет </p>
+    {% endif %}
+</body>
+</html>

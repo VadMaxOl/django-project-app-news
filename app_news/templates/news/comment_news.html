@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Подробно о новости</title>
+    <style>
+        button:hover {
+        color: black; /* Цвет текста активного пункта */
+        background-color: orange; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+        button:active {
+        color: white; /* Цвет текста активного пункта */
+        background-color: brown; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="padding-left: 70px; padding-right: 250px; display: inline-block">Подробно</h1>
+
+    {% if comment_news %}
+
+    <ul style="list-style-type: none">
+        <li style="min-height: 20px; margin-bottom: 5px; padding: 10px; margin-right: 40px;
+        border: 3px solid black; background-color: Goldenrod; border-radius: 20px; min-width: 500px">
+            <div style="display: block; margin-bottom: 10px; min-width: 100px;">
+                <h3>
+                    {{ comment_news.title }}
+                </h3>
+            </div>
+            <div style="display: block; min-width: 200px">
+                <p style="min-width: 500px">{{ comment_news.content }}</p>
+            </div>
+            <form method="post" action="." style="background-color: white; min-width: 460px;
+    padding: 20px; border-radius: 20px; margin-bottom: 10px; border: 1px solid black;">
+                {% csrf_token %}
+                {% if request.user.is_authenticated %}
+                    <h3 style="margin-top: 0; margin-right: 10px">Пользователь: {{ request.user.username }}</h3>
+                    {{ comment_form.text }}
+                {% else %}
+                    <b>
+                        {{ comment_form.as_p }}
+                    </b>
+                {% endif %}
+                <button type="submit" style="display: block">Комментировать</button>
+            </form>
+            <span style="padding: 20px">Комментарии:</span>
+            <div style="display: block; padding: 10px; margin-bottom: 10px; background-color: white;
+            border: 1px solid black; border-radius: 10px">
+                {% for comment in comment_news.comments_set.all %}
+                <span>{{ comment.name }}</span>
+                <p style="border-bottom: 1px dashed orange">{{ comment.text }}</p>
+                {% endfor %}
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: inline-block; width: 50%">
+                    <div style="display: block; width: 250px">
+                        <span>Дата создания: </span>
+                    {{ comment_news.created_at }}
+                    </div>
+                    <div style="display: block; width: 250px">
+                        <span>Дата редактирования: </span>
+                    {{ comment_news.updated_at }}
+                    </div>
+                    <div style="display: block; width: 250px">
+                        <span>Флаг активности: </span>
+                    {{ comment_news.flag_active }}
+                    </div>
+                </div>
+            </div>
+        </li>
+    </ul>
+    {% else %}
+        <p> Новостей нет </p>
+    {% endif %}
+</body>
+</html>

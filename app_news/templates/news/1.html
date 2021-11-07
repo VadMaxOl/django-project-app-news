@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Комментирование новости</title>
+</head>
+<body>
+    <h1 style="text-align: center; background-color: Goldenrod;
+    width: 495px; padding: 20px; border-radius: 20px; color: black">Комментирование новости</h1>
+    <form method="post" action='.' style="background-color: Goldenrod; width: 495px;
+    padding: 20px; border-radius: 20px;">
+        {% csrf_token %}
+        <h3>{{ comment_news.title }}</h3>
+        {{ comment_news.content }}
+        {% if request.user.is_authenticated %}
+            <h3 style="margin-right: 10px">Пользователь: {{ request.user.username }}</h3>
+            {{ comment_form.text }}
+        {% else %}
+            <b>
+                {{ comment_form.as_p }}
+            </b>
+        {% endif %}
+        <button type="submit">Комментировать</button>
+    </form>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Новости</title>
+    <style>
+        button:hover {
+        color: black; /* Цвет текста активного пункта */
+        background-color: orange; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+        button:active {
+        color: white; /* Цвет текста активного пункта */
+        background-color: brown; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="padding-left: 70px; padding-right: 250px; display: inline-block">Неопубликованные новости</h1>
+
+    {% if news_list %}
+
+    <ul style="list-style-type: none">
+        {% for i in news_list %}
+        <li style="min-height: 20px; margin-bottom: 5px; padding: 10px;
+        border: 3px solid orange; border-radius: 20px; width: 500px">
+            <div style="display: block; margin-bottom: 10px; min-width: 100px;">
+                <h3 style="margin: 0">
+                    {{ i.title }}
+                </h3>
+            </div>
+            <div style="display: block; margin-bottom: 10px; height: 85px; min-width: 200p; overflow: hidden">
+                <p style="margin: 0; width: 500px">{{ i.content }}</p>
+            </div>
+
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <div style="display: inline-block; width: 50%">
+                    <div style="display: block; width: 250px">
+                    <span>Дата создания: </span>
+                    {{ i.created_at }}
+                    </div>
+                    <div style="display: block; width: 250px">
+                    <span>Дата редактирования: </span>
+                    {{ i.updated_at }}
+                    </div>
+                    <div style="display: block; width: 250px">
+                    <span>Флаг активности: </span>
+                    {{ i.flag_active }}
+                    </div>
+                </div>
+                <div style="display: flex; width: 50%">
+                    <div style="display: inline-block; margin-right: 5px; width: 80px">
+                        <form action="{% url 'edit_news' i.id %}" method="get">
+                            <button type="submit" style="height:30px; width:80px; border-radius: 10px;
+                        border: 3px solid orange;">Редактировать</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p> Новостей нет </p>
+    {% endif %}
+</body>
+</html>

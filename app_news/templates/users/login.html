@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Страница входа</title>
+</head>
+<body style="style=margin: auto;">
+    <div style="text-align: center; background-color: MediumAquamarine;
+        width: 500px; padding: 20px; border-radius: 20px; margin: 10px auto;">
+        <h1 style="margin-top: 0;">Страница входа</h1>
+        <div style="text-align: center">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_table }}
+                <button type="submit">login</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
