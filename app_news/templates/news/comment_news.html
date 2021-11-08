@@ -50,8 +50,8 @@
             border: 1px solid black; border-radius: 10px">
 
                 {% for comment in comment_news.comments_set.all %}
-                    {% if comment.user_id != Null %}
-                        <span>{{ comment.user_id }}</span>
+                    {% if comment.user %}
+                        <span>{{ comment.user.username }}</span>
                         <p style="border-bottom: 1px dashed orange">{{ comment.text }}</p>
                     {% else %}
                         <span>{{ comment.name }} - анонимный пользователь</span>
