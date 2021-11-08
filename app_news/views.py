@@ -2,7 +2,7 @@ from django.contrib.auth import logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
 from app_news.models import News, Comments
@@ -63,14 +63,13 @@ class CommentNews(View):
                                                                   "comment_form": comment_form})
 
     def post(self, request, news_id):
-        news = News.objects.get(id=news_id)
+        news = get_object_or_404(News, pk=news_id)
         comment_form = CommentsForm(request.POST)
         if request.user.is_authenticated:
-            comments = Comments.objects.filter(news=news)
             if comment_form.is_valid():
                 form = comment_form.save(commit=False)
-                form.name = request.user
-                form.text = comments
+                form.news = news
+                form.user = request.user
                 form.save()
                 return redirect("/")
         else:
