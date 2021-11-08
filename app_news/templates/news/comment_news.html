@@ -48,10 +48,17 @@
             <span style="padding: 20px">Комментарии:</span>
             <div style="display: block; padding: 10px; margin-bottom: 10px; background-color: white;
             border: 1px solid black; border-radius: 10px">
+
                 {% for comment in comment_news.comments_set.all %}
-                <span>{{ comment.name }}</span>
-                <p style="border-bottom: 1px dashed orange">{{ comment.text }}</p>
+                    {% if comment.user_id != Null %}
+                        <span>{{ comment.user_id }}</span>
+                        <p style="border-bottom: 1px dashed orange">{{ comment.text }}</p>
+                    {% else %}
+                        <span>{{ comment.name }} - анонимный пользователь</span>
+                        <p style="border-bottom: 1px dashed orange">{{ comment.text }}</p>
+                    {% endif %}
                 {% endfor %}
+
             </div>
             <div style="display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: inline-block; width: 50%">
