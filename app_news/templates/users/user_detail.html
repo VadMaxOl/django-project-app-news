@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Просмотр данных аккаунта</title>
+    <style>
+        button:hover {
+        color: black; /* Цвет текста активного пункта */
+        background-color: orange; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+        button:active {
+        color: white; /* Цвет текста активного пункта */
+        background-color: brown; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="padding-left: 70px; padding-right: 250px; display: inline-block">Просмотр данных аккаунта</h1>
+
+    {% if user_detail %}
+
+    <ul style="list-style-type: none">
+
+        <li>Логин:      {{ user_detail.username }}</li>
+        <li>Имя:        {{ user_detail.first_name }}</li>
+        <li>Фамилия:    {{ user_detail.last_name }}</li>
+        <li>E-mail:     {{ user_detail.email }}</li>
+        <li>Phone:      {{ user_detail.anotherdatauser.phone }}</li>
+        <li>City:       {{ user_detail.anotherdatauser.city }}</li>
+
+    </ul>
+    {% else %}
+        <p> Ошибка </p>
+    {% endif %}
+</body>
+</html>

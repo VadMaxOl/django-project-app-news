@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Пользователи</title>
+    <style>
+        button:hover {
+        color: black; /* Цвет текста активного пункта */
+        background-color: orange; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+        button:active {
+        color: white; /* Цвет текста активного пункта */
+        background-color: brown; /* Цвет фона активного пункта */
+        cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1 style="padding-left: 70px; padding-right: 250px; display: inline-block">Зарегистрированные пользователи</h1>
+
+    {% if users %}
+
+    <ul style="list-style-type: none">
+        {% for i in users %}
+            <li>Логин: {{ i.username }}</li>
+            <li>Имя: {{ i.first_name }}</li>
+            <li>Фамилия: {{ i.last_name }}</li>
+            <li>E-mail: {{ i.email }}</li>
+            <li>Phone: {{ i.anotherdatauser.phone }}</li>
+            <li>City: {{ i.anotherdatauser.city }}</li>
+            <li> ==================== </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+        <p> Пользователей нет </p>
+    {% endif %}
+</body>
+</html>

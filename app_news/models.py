@@ -38,3 +38,20 @@ class Comments(models.Model):
         db_table = 'comments'
         verbose_name_plural = 'Комментарии'
 
+
+class AnotherDataUser(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=12, blank=True, verbose_name='Номер телефона')
+    city = models.CharField(max_length=36, blank=True, verbose_name='Город')
+    flag_verification = models.BooleanField(blank=True, default=False, verbose_name='Флаг верификации')
+    count_news = models.IntegerField(blank=True, default=0, verbose_name='Кол-во опубликованных новостей')
+
+    class Meta:
+        db_table = 'anotherdatausers'
+        verbose_name_plural = 'Дополнительные данные пользователя'
+        permissions = (
+            ("can_verification_user", "Может проверить пользователя"),
+        )
+
+    def __str__(self):
+        return self.user

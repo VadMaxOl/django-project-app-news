@@ -8,7 +8,15 @@
     <h1>Регистрация нового пользователя</h1>
     <form method="post">
         {% csrf_token %}
-        {{ form.as_p}}
+        {% for f in form %}
+        <div style="display: flex">
+            <label class="form-label" style="width: 150px" for="{{ f.id_for_label }}"> {{ f.label }} </label>
+            <p style="margin-top: 0">
+                {{f}}
+            </p>
+            <div class="form-error"> {{f.errors}} </div>
+        </div>
+        {% endfor %}
         <button type="submit">Регистрация</button>
     </form>
 </body>

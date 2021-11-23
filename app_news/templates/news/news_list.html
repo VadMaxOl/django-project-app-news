@@ -26,10 +26,13 @@
             <li>
                 <h1 style="padding-left: 10px; padding-right: 180px; display: inline-block; font-family: Arial;">Новости</h1>
             </li>
-            <li style="display: flex; align-items: center; padding: 0px 50px;">
+            <li style="display: block; align-items: center; padding: 0px 50px;">
                 {% if request.user.is_authenticated %}
                     <h3 style="margin-right: 10px">Добро пожаловать на сайт, {{ request.user.username }}!</h3>
-                    <a href="{% url 'logout' %}">Выйти</a>
+                    <div style="width: 200px; display: flex; justify-content: space-around">
+                        <a href="{% url 'user_detail' request.user.id %}">Личный кабинет</a>
+                        <a href="{% url 'logout' %}">Выйти</a>
+                    </div>
                 {% else %}
                     <b>
                         <a href="{% url 'register' %}">Регистрация</a> | <a href="{% url 'login' %}">Войти</a>
@@ -37,6 +40,12 @@
                 {% endif %}
             </li>
         </ul>
+            <form style="border: 3px solid orange; border-radius: 20px;
+            min-width: 500px; height: 20px; margin-bottom: 10px; padding: 5px"
+                  action="{% url 'filter_news' %}" method="get">
+              <input style="border: none; min-width: 500px; height: 15px;"
+                     name="q" type="text" placeholder="Введите хештег или дату создания новости в формате YYYY-MM-DD">
+            </form>
         </li>
         {% for i in news_list %}
         <li style="min-height: 20px; margin-bottom: 5px; padding: 10px;
@@ -66,13 +75,14 @@
                     </div>
                 </div>
                 <div style="display: flex; justify-content: flex-end; width: 50%">
+                    {% if user.anotherdatauser.flag_verification == True %}
                     <div style="display: inline-block; margin-right: 5px; width: 100px">
                         <form action="{% url 'edit_news' i.id %}" method="get">
                             <button type="submit" style="height:30px; width:100px; border-radius: 10px;
                         border: 3px solid orange;">Редактировать</button>
                         </form>
                     </div>
-
+                    {% endif %}
                     <div style="display: inline-block; width: 100px; margin: 0; padding: 0; vertical-align: center;">
                         <form action="{% url 'comment_news' i.id %}" method="get">
                             <button type="submit" style="height:30px; width:100px; border-radius: 10px;
@@ -84,7 +94,10 @@
         </li>
         {% endfor %}
     </ul>
+
     <div>
+
+        {% if user.anotherdatauser.flag_verification == True %}
         <ul style="display: flex; padding: 0; list-style-type: none">
             <li>
                 <form action="unpublished_news_list/" method="get">
@@ -99,7 +112,12 @@
                 </form>
             </li>
         </ul>
+        {% else %}
+        <span>У вас нет прав для добавления новости!</span>
+        {% endif %}
+
     </div>
+
     {% else %}
         <p> Новостей нет </p>
     {% endif %}

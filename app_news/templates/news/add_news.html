@@ -11,10 +11,14 @@
         <form method="post" action="{% url 'add_news'%}" style="background-color: MediumAquamarine; width: 500px;
         padding: 20px; border-radius: 20px; margin: auto;">
             {% csrf_token %}
+
             {% for f in form %}
             <p><label class="form-label" for="{{ f.id_for_label }}"> {{ f.label }} </label> {{f}} </p>
             {% endfor %}
-            <button type="submit">Добавить новость</button>
+            <div style="display: flex; justify-content: space-around">
+                <button type="submit">Добавить новость</button>
+                <span>Новость будет добавлена в раздел "Неопубликованные новости"</span>
+            </div>
         </form>
     </div>
 </body>

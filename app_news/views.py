@@ -1,14 +1,17 @@
 from django.contrib.auth import logout
+from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.db.models import Q
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from app_news.models import News, Comments
-from django.views.generic import ListView, CreateView
-from app_news.forms import NewsForm, CommentsForm
+from app_news.models import News, Comments, AnotherDataUser
+from django.views.generic import ListView, CreateView, DetailView
+from app_news.forms import NewsForm, CommentsForm, RegistrationUserForm
 from django.contrib.auth.views import LoginView
+from django.core.exceptions import PermissionDenied
 
 
 class NewsViews(ListView):
@@ -23,6 +26,17 @@ class UnpublishedNewsViews(ListView):
     queryset = News.objects.filter(flag_active='n')
 
 
+class FilterTagNewsViews(ListView):
+    model = News
+    template_name = "news/filter_news_list.html"
+
+    def get_queryset(self):
+        query = self.request.GET.get('q')
+        queryset = News.objects.filter(
+            Q(content__icontains=query) | Q(created_at__icontains=query)
+        )
+        return queryset
+
 '''
 class DetailsNewsViews(DetailView):
     model = News
@@ -35,6 +49,14 @@ class DetailsNewsViews(DetailView):
 class AddNews(CreateView):
     form_class = NewsForm
     template_name = "news/add_news.html"
+
+
+'''
+@permission_required('app_news.can_add_news')
+def addnews(request):
+    form = News.objects.all()
+    return render(request, 'news/add_news.html', {'add_news': form})
+'''
 
 
 class EditNews(View):
@@ -87,12 +109,37 @@ class NewsLoginView(LoginView):
     template_name = 'users/login.html'
 
 
-class RegisterUser(CreateView):
-    form_class = UserCreationForm
-    template_name = 'users/register.html'
-    success_url = reverse_lazy('login')
+def register_user(request):
+    if request.method == 'POST':
+        form = RegistrationUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            phone = form.cleaned_data.get('phone')
+            city = form.cleaned_data.get('city')
+            AnotherDataUser.objects.create(
+                user=user,
+                phone=phone,
+                city=city,
+            )
+            return redirect('/')
+    else:
+        form = RegistrationUserForm
+    return render(request, 'users/register.html', {'form': form})
 
 
 def logout_view(request):
     logout(request)
     return HttpResponse('Вы успешно вышли из под своей учетной записи!')
+
+
+class UsersViews(ListView):
+    model = User
+    template_name = "users/users_list.html"
+    context_object_name = 'users'
+
+
+class DetailsUserViews(DetailView):
+    model = User
+    template_name = "users/user_detail.html"
+    pk_url_kwarg = 'user_id'
+    context_object_name = 'user_detail'
