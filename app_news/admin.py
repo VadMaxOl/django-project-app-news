@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.forms import TextInput, Textarea
 from django.template.defaultfilters import truncatechars
 from django.db import models
-from app_news.models import News, Comments, AnotherDataUser
+from app_news.models import News, Comments, Profile
 
 
 class CommentInLine(admin.TabularInline):
@@ -43,7 +43,7 @@ class CommentAdmin(admin.ModelAdmin):
     delete_comment.short_description = 'Удалить комментарий'
 
 
-class AnotherDataUserAdmin(admin.ModelAdmin):
+class ProfileAdmin(admin.ModelAdmin):
     list_display = ['id', 'user', 'flag_verification']
 
     actions = ['mark_is_active', 'mark_is_not_active']
@@ -58,6 +58,6 @@ class AnotherDataUserAdmin(admin.ModelAdmin):
     mark_is_not_active.short_description = 'Перевести в статус Не верифицирован'
 
 
-admin.site.register(AnotherDataUser, AnotherDataUserAdmin)
+admin.site.register(Profile, ProfileAdmin)
 admin.site.register(News, NewAdmin)
 admin.site.register(Comments, CommentAdmin)

@@ -17,11 +17,21 @@
     </style>
 </head>
 <body>
-    <h1 style="padding-left: 70px; padding-right: 250px; display: inline-block">Неопубликованные новости</h1>
+
 
     {% if news_list %}
 
-    <ul style="list-style-type: none">
+    <ul style=" list-style-type: none">
+        <li style="display: flex; align-items: center; min-height: 20px; margin-bottom: 5px; padding: 10px;
+        border: 3px solid orange; border-radius: 20px; width: 500px">
+            <h1 style="padding-left: 20px; padding-right: 50px; display: inline-block">Неопубликованные новости</h1>
+            <div style="display: inline-block; margin-right: 5px; width: 100px">
+                <form action="{% url 'news'  %}" method="get">
+                    <button type="submit" style="height:30px; width:100px; border-radius: 10px;
+                border: 3px solid orange;">На главную</button>
+                </form>
+            </div>
+        </li>
         {% for i in news_list %}
         <li style="min-height: 20px; margin-bottom: 5px; padding: 10px;
         border: 3px solid orange; border-radius: 20px; width: 500px">

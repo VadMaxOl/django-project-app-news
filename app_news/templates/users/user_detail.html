@@ -23,12 +23,13 @@
 
     <ul style="list-style-type: none">
 
-        <li>Логин:      {{ user_detail.username }}</li>
-        <li>Имя:        {{ user_detail.first_name }}</li>
-        <li>Фамилия:    {{ user_detail.last_name }}</li>
-        <li>E-mail:     {{ user_detail.email }}</li>
-        <li>Phone:      {{ user_detail.anotherdatauser.phone }}</li>
-        <li>City:       {{ user_detail.anotherdatauser.city }}</li>
+        <li>Логин:              {{ user_detail.username }}</li>
+        <li>Имя:                {{ user_detail.first_name }}</li>
+        <li>Фамилия:            {{ user_detail.last_name }}</li>
+        <li>E-mail:             {{ user_detail.email }}</li>
+        <li>Phone:              {{ user_detail.profile.phone }}</li>
+        <li>City:               {{ user_detail.profile.city }}</li>
+        <li>Кол-во новостей:    {{ user_detail.profile.count_news }}</li>
 
     </ul>
     {% else %}

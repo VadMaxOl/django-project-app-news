@@ -7,7 +7,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views import View
-from app_news.models import News, Comments, AnotherDataUser
+from app_news.models import News, Comments, Profile
 from django.views.generic import ListView, CreateView, DetailView
 from app_news.forms import NewsForm, CommentsForm, RegistrationUserForm
 from django.contrib.auth.views import LoginView
@@ -18,6 +18,19 @@ class NewsViews(ListView):
     model = News
     template_name = "news/news_list.html"
     queryset = News.objects.filter(flag_active='a')
+
+
+def addnews(request):
+    if not request.user.has_perm('app_news.can_verification_user'):
+        raise PermissionDenied
+    form = NewsForm(request.POST)
+    user_count = Profile.objects.get(user=request.user)
+    if form.is_valid():
+        user_count.count_news += 1
+        user_count.save()
+        form.save()
+        return redirect("/")
+    return render(request, 'news/add_news.html', {'form': form})
 
 
 class UnpublishedNewsViews(ListView):
@@ -43,7 +56,7 @@ class DetailsNewsViews(DetailView):
     template_name = "news/comment_news.html"
     pk_url_kwarg = 'news_id'
     context_object_name = 'news_detail'
-'''
+
 
 
 class AddNews(CreateView):
@@ -51,7 +64,7 @@ class AddNews(CreateView):
     template_name = "news/add_news.html"
 
 
-'''
+
 @permission_required('app_news.can_add_news')
 def addnews(request):
     form = News.objects.all()
@@ -113,10 +126,10 @@ def register_user(request):
     if request.method == 'POST':
         form = RegistrationUserForm(request.POST)
         if form.is_valid():
-            user = form.save()
             phone = form.cleaned_data.get('phone')
             city = form.cleaned_data.get('city')
-            AnotherDataUser.objects.create(
+            user = form.save()
+            Profile.objects.create(
                 user=user,
                 phone=phone,
                 city=city,
