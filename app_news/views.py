@@ -1,11 +1,13 @@
-from django.contrib.auth import logout
+from django.contrib import messages
+from django.contrib.auth import logout, login
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.mixins import LoginRequiredMixin, AccessMixin
 from django.contrib.auth.models import User
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.views import View
 from app_news.models import News, Comments, Profile
 from django.views.generic import ListView, CreateView, DetailView
@@ -57,13 +59,9 @@ class DetailsNewsViews(DetailView):
     pk_url_kwarg = 'news_id'
     context_object_name = 'news_detail'
 
-
-
 class AddNews(CreateView):
     form_class = NewsForm
     template_name = "news/add_news.html"
-
-
 
 @permission_required('app_news.can_add_news')
 def addnews(request):
@@ -134,6 +132,7 @@ def register_user(request):
                 phone=phone,
                 city=city,
             )
+            login(request, user)  # Автоматически логиним нового пользователя
             return redirect('/')
     else:
         form = RegistrationUserForm
@@ -145,14 +144,26 @@ def logout_view(request):
     return HttpResponse('Вы успешно вышли из под своей учетной записи!')
 
 
-class UsersViews(ListView):
+class MyLoginRequiredMixin(AccessMixin):
+    """Verify that the current user is administrator."""
+    def dispatch(self, request, *args, **kwargs):
+        users = User.objects.all()
+        if not request.user.is_staff:
+            return self.handle_no_permission()
+        return render(request, 'users/users_list.html', {'users': users})
+
+
+class UsersViews(MyLoginRequiredMixin, ListView):
     model = User
     template_name = "users/users_list.html"
     context_object_name = 'users'
 
 
-class DetailsUserViews(DetailView):
+class DetailsUserViews(LoginRequiredMixin, DetailView):
     model = User
     template_name = "users/user_detail.html"
     pk_url_kwarg = 'user_id'
     context_object_name = 'user_detail'
+
+    permission_required = 'app_news.view_user'
+    raise_exception = True
